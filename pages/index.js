@@ -3,7 +3,7 @@ import request from '../api'
 import {useEffect, useState} from 'react'
 import HomePageStyle from '../styles/HomePageStyle';
 
-export default function Home({data}) {
+export default function Home({launches}) {
     const [limitPage, setLimitPage] = useState(6);
 
     useEffect(() => {
@@ -12,13 +12,12 @@ export default function Home({data}) {
     }, [])
 
     const scrollHandler = (e) => {
-        if ((e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100) &&
-            (data.launches.length <= data.totalCount)) {
+        if ((e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100)) {
             setLimitPage(prevState => prevState + 6)
         }
     }
 
-    const cards = data.launches.slice(0, limitPage).map((launch, idx) => {
+    const cards = launches.slice(0, limitPage).map((launch, idx) => {
         const objectDate = new Date(launch.launch_date_utc);
         const date = objectDate.toLocaleDateString('ru-RU', {
                 day: 'numeric',
@@ -29,7 +28,6 @@ export default function Home({data}) {
             }
         )
         return (
-            //исправить idx
             <div key={launch.flight_number + idx} className="card">
                 <img className="card__img"
                      src={launch.links.mission_patch_small ? launch.links.mission_patch_small : '/img/404.png'}
@@ -60,6 +58,8 @@ export default function Home({data}) {
                         <div className="container">
                             {cards}
                         </div>
+                        {cards.length === launches.length &&
+                        <h3 className="page-end">Данные по запускам SpaceX закончились &#128533;</h3>}
                     </div>
                 </HomePageStyle>
             </main>
@@ -68,17 +68,14 @@ export default function Home({data}) {
 }
 
 Home.getInitialProps = async () => {
-    const data = await request()
+    return await request()
         .then(async (res) => {
             return {
-                launches: await res.json(),
-                totalCount: res.headers.get('spacex-api-count')
+                launches: await res.json()
             }
         })
         .catch((err) => {
             console.log(err)
             return {}
         })
-
-    return {data}
 }
