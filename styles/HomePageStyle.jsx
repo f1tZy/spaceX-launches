@@ -6,6 +6,10 @@ const HomePageStyle = styled.div`
     max-width: 1920px;
     width: 100%;
     margin: 0 auto;
+    
+    .title {
+      text-align: center;
+    }
 
     .container {
       position: relative;
@@ -46,7 +50,7 @@ const HomePageStyle = styled.div`
           padding: 24px;
 
           .info__date {
-            font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
+            font-family: 'Montserrat', Arial, Helvetica, sans-serif;
             font-style: normal;
             font-weight: normal;
             font-size: 18px;
@@ -57,7 +61,7 @@ const HomePageStyle = styled.div`
           }
 
           .info__title {
-            font-family: 'Roboto Slab', Arial, Helvetica, sans-serif;
+            font-family: 'Montserrat', Arial, Helvetica, sans-serif;
             font-style: normal;
             font-weight: normal;
             font-size: 26px;
@@ -67,16 +71,16 @@ const HomePageStyle = styled.div`
           }
 
           .info__text {
-            font-family: 'Roboto', Arial, Helvetica, sans-serif;
+            font-family: 'Montserrat', Arial, Helvetica, sans-serif;
             font-style: normal;
             font-weight: normal;
             font-size: 16px;
             line-height: 22px;
             color: #1A1B22;
             margin: 16px 0 18px;
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
+            //display: -webkit-box;
+            //-webkit-line-clamp: 4;
+            //-webkit-box-orient: vertical;
             overflow: hidden;
             text-align: justify;
           }
@@ -134,7 +138,7 @@ const HomePageStyle = styled.div`
         @media screen and (max-width: 640px) {
           .info {
             .info__title {
-              font-family: 'Roboto Slab', Arial, Helvetica, sans-serif;
+              font-family: 'Montserrat', Arial, Helvetica, sans-serif;
               font-style: normal;
               font-weight: normal;
               font-size: 22px;
@@ -142,7 +146,7 @@ const HomePageStyle = styled.div`
             }
 
             .info__text {
-              font-family: 'Roboto', Arial, Helvetica, sans-serif;
+              font-family: 'Montserrat', Arial, Helvetica, sans-serif;
               font-style: normal;
               font-weight: normal;
               font-size: 16px;

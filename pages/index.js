@@ -3,18 +3,23 @@ import request from '../api'
 import {useEffect, useState} from 'react'
 import HomePageStyle from '../styles/HomePageStyle';
 
-export default function Home() {
-    const [data, setData] = useState([])
+export default function Home({data}) {
+    const [limitPage, setLimitPage] = useState(6);
+
     useEffect(() => {
-        request()
-            .then((res) => setData(res))
-            .catch((err) => console.log(err))
+        document.addEventListener('scroll', scrollHandler);
+        return () => document.removeEventListener('scroll', scrollHandler);
     }, [])
 
-    console.log(data)
+    const scrollHandler = (e) => {
+        if ((e.target.documentElement.scrollHeight - (e.target.documentElement.scrollTop + window.innerHeight) < 100) &&
+            (data.launches.length <= data.totalCount)) {
+            setLimitPage(prevState => prevState + 6)
+        }
+    }
 
-    const cards = data.map((launch, idx) => {
-        const objectDate = new Date(launch.date_utc);
+    const cards = data.launches.slice(0, limitPage).map((launch, idx) => {
+        const objectDate = new Date(launch.launch_date_utc);
         const date = objectDate.toLocaleDateString('ru-RU', {
                 day: 'numeric',
                 month: 'long',
@@ -24,12 +29,15 @@ export default function Home() {
             }
         )
         return (
-            <div key={idx} className="card">
-                <img className="card__img" src={launch.links.patch.small} alt="Изображение карточки"/>
+            //исправить idx
+            <div key={launch.flight_number + idx} className="card">
+                <img className="card__img"
+                     src={launch.links.mission_patch_small ? launch.links.mission_patch_small : '/img/404.png'}
+                     alt="Изображение карточки"/>
                 <div className="info">
                     <p className="info__date">{date}</p>
-                    <h2 className="info__title">{launch.name}</h2>
-                    <p className='info__status'>Статус: {launch.success ?
+                    <h2 className="info__title">{launch.rocket.rocket_name}</h2>
+                    <p className="info__status">Статус: {launch.launch_success ?
                         <span className="info__status-badge success">Успешно</span>
                         :
                         <span className="info__status-badge danger">Неуспешно</span>
@@ -48,6 +56,7 @@ export default function Home() {
             <main>
                 <HomePageStyle>
                     <div className="wrapper">
+                        <h1 className="title">Список полетов SpaceX</h1>
                         <div className="container">
                             {cards}
                         </div>
@@ -56,4 +65,20 @@ export default function Home() {
             </main>
         </>
     )
+}
+
+Home.getInitialProps = async () => {
+    const data = await request()
+        .then(async (res) => {
+            return {
+                launches: await res.json(),
+                totalCount: res.headers.get('spacex-api-count')
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            return {}
+        })
+
+    return {data}
 }
