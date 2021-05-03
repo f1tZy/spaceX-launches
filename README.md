@@ -14,6 +14,8 @@ React, NextJs, StyledComponents
 
 git clone https://github.com/f1tZy/spaceX-launches - клонировать репозиторий
 
+cd spaceX-launches - перейти в папку проекта
+
 yarn install - установить зависимости.
 
 yarn dev - запустить проект в режиме разработки на localhost:3000.
