@@ -67,15 +67,14 @@ export default function Home({launches}) {
     )
 }
 
+
 Home.getInitialProps = async () => {
     return await request()
-        .then(async (res) => {
-            return {
-                launches: await res.json()
-            }
+        .then((res) => {
+            return {launches: res}
         })
         .catch((err) => {
             console.log(err)
-            return {}
+            return {launches: []}
         })
 }
