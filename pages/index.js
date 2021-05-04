@@ -1,8 +1,9 @@
-import Head from 'next/head'
-import request from '../api'
-import {useEffect, useMemo, useState} from 'react'
+import Head from 'next/head';
+import request from '../api';
+import {useEffect, useMemo, useState} from 'react';
 import HomePageStyle from '../styles/HomePageStyle';
 import Loader from '../components/loader';
+import PropTypes from 'prop-types';
 
 export default function Home({initialState, initialTotalLaunches}) {
     const [currentOffset, setCurrentOffset] = useState(6);
@@ -16,13 +17,13 @@ export default function Home({initialState, initialTotalLaunches}) {
                 .then(async (res) => {
                     const data = await res.json()
                     setLaunches([...launches, ...data])
-                    setTotalLaunches(res.headers.get('spacex-api-count'))
+                    setTotalLaunches(Number(res.headers.get('spacex-api-count')))
                     setCurrentOffset(prevState => prevState + 6)
                 })
                 .catch((err) => console.log(err))
                 .finally(() => setFetching(false))
         }
-    }, [fetching])
+    }, [fetching]);
 
     useEffect(() => {
         document.addEventListener('scroll', scrollHandler);
@@ -65,7 +66,7 @@ export default function Home({initialState, initialTotalLaunches}) {
                 </div>
             )
         })
-    }, [launches])
+    }, [launches]);
 
     return (
         <>
@@ -80,8 +81,8 @@ export default function Home({initialState, initialTotalLaunches}) {
                         <div className="container">
                             {cards}
                         </div>
-                        {fetching && <Loader />}
-                        {launches.length === Number(totalLaunches) &&
+                        {fetching && <Loader/>}
+                        {launches.length === totalLaunches &&
                         <h3 className="page-end">Данные по запускам SpaceX закончились &#128533;</h3>}
                     </div>
                 </HomePageStyle>
@@ -90,20 +91,26 @@ export default function Home({initialState, initialTotalLaunches}) {
     )
 }
 
+Home.propTypes = {
+    initialState: PropTypes.arrayOf(PropTypes.object),
+    initialTotalLaunches: PropTypes.number,
+}
+
+Home.defaultProps = {
+    initialState: [],
+    initialTotalLaunches: 0,
+}
+
 
 Home.getInitialProps = async () => {
     return await request(0)
         .then(async (res) => {
             return {
                 initialState: await res.json(),
-                initialTotalLaunches: res.headers.get('spacex-api-count')
+                initialTotalLaunches: Number(res.headers.get('spacex-api-count'))
             }
         })
         .catch((err) => {
             console.log(err)
-            return {
-                initialState: [],
-                initialTotalLaunches: null,
-            }
-        })
+        });
 }
