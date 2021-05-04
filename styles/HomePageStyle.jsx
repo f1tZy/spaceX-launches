@@ -78,9 +78,6 @@ const HomePageStyle = styled.div`
             line-height: 22px;
             color: #1A1B22;
             margin: 16px 0 18px;
-            //display: -webkit-box;
-            //-webkit-line-clamp: 4;
-            //-webkit-box-orient: vertical;
             overflow: hidden;
             text-align: justify;
           }

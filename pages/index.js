@@ -2,6 +2,7 @@ import Head from 'next/head'
 import request from '../api'
 import {useEffect, useMemo, useState} from 'react'
 import HomePageStyle from '../styles/HomePageStyle';
+import Loader from '../components/loader';
 
 export default function Home({initialState, initialTotalLaunches}) {
     const [currentOffset, setCurrentOffset] = useState(6);
@@ -79,6 +80,7 @@ export default function Home({initialState, initialTotalLaunches}) {
                         <div className="container">
                             {cards}
                         </div>
+                        {fetching && <Loader />}
                         {launches.length === Number(totalLaunches) &&
                         <h3 className="page-end">Данные по запускам SpaceX закончились &#128533;</h3>}
                     </div>
